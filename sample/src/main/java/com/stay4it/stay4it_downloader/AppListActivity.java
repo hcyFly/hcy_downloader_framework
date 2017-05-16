@@ -187,7 +187,7 @@ public class AppListActivity extends ActionBarActivity implements AdapterView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatement hcy
         if (id == R.id.action_settings) {
             if (item.getTitle().equals("pause all")) {
                 item.setTitle(R.string.action_recover_all);
