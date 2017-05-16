@@ -68,11 +68,11 @@ public class DownloadThread implements Runnable {
                 byte[] buffer = new byte[2048];
                 int len = -1;
                 while ((len = is.read(buffer)) != -1) {
+                    raf.write(buffer, 0, len);
+                    listener.onProgressChanged(index, len);
                     if (isPaused || isCancelled || isError) {
                         break;
                     }
-                    raf.write(buffer, 0, len);
-                    listener.onProgressChanged(index, len);
                 }
                 raf.close();
                 is.close();
@@ -82,11 +82,11 @@ public class DownloadThread implements Runnable {
                 byte[] buffer = new byte[2048];
                 int len = -1;
                 while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                    listener.onProgressChanged(index, len);
                     if (isPaused || isCancelled || isError) {
                         break;
                     }
-                    fos.write(buffer, 0, len);
-                    listener.onProgressChanged(index, len);
                 }
                 fos.close();
                 is.close();
@@ -134,18 +134,18 @@ public class DownloadThread implements Runnable {
 
     public void pause() {
         isPaused = true;
-        Thread.currentThread().interrupt();
+//        Thread.currentThread().interrupt();
     }
 
     public void cancel() {
         isCancelled = true;
-        Thread.currentThread().interrupt();
+//        Thread.currentThread().interrupt();
     }
 
 
     public void cancelByError() {
         isError = true;
-        Thread.currentThread().interrupt();
+//        Thread.currentThread().interrupt();
     }
 
     interface DownloadListener {

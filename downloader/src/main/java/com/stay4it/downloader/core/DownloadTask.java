@@ -120,12 +120,12 @@ public class DownloadTask implements ConnectThread.ConnectListener, DownloadThre
         for (int i = 0; i < DownloadConfig.getConfig().getMaxDownloadThreads(); i++) {
             startPos = i * block + entry.ranges.get(i);
             if (i == DownloadConfig.getConfig().getMaxDownloadThreads() - 1) {
-                endPos = entry.totalLength;
+                endPos = entry.totalLength - 1;
             } else {
                 endPos = (i + 1) * block - 1;
             }
             if (startPos < endPos) {
-                mDownloadThreads[i] = new DownloadThread(entry.url,destFile, i, startPos, endPos, this);
+                mDownloadThreads[i] = new DownloadThread(entry.url, destFile, i, startPos, endPos, this);
                 mDownloadStatus[i] = DownloadEntry.DownloadStatus.downloading;
                 mExecutor.execute(mDownloadThreads[i]);
             } else {
@@ -141,7 +141,7 @@ public class DownloadTask implements ConnectThread.ConnectListener, DownloadThre
         mDownloadStatus = new DownloadEntry.DownloadStatus[1];
         mDownloadStatus[0] = entry.status;
         mDownloadThreads = new DownloadThread[1];
-        mDownloadThreads[0] = new DownloadThread(entry.url,destFile, 0, 0, 0, this);
+        mDownloadThreads[0] = new DownloadThread(entry.url, destFile, 0, 0, 0, this);
         mExecutor.execute(mDownloadThreads[0]);
     }
 
@@ -189,7 +189,7 @@ public class DownloadTask implements ConnectThread.ConnectListener, DownloadThre
 //        if (stamp - mLastStamp > 1000) {
 //            mLastStamp = stamp;
 //        }
-        if (TickTack.getInstance().needToNotify()){
+        if (TickTack.getInstance().needToNotify()) {
             notifyUpdate(entry, DownloadService.NOTIFY_UPDATING);
         }
     }
@@ -222,7 +222,7 @@ public class DownloadTask implements ConnectThread.ConnectListener, DownloadThre
     public synchronized void onDownloadError(int index, String message) {
         Trace.e("onDownloadError:" + message);
         mDownloadStatus[index] = DownloadEntry.DownloadStatus.error;
-
+//        TODO add retry operation
         for (int i = 0; i < mDownloadStatus.length; i++) {
             if (mDownloadStatus[i] != DownloadEntry.DownloadStatus.completed && mDownloadStatus[i] != DownloadEntry.DownloadStatus.error) {
                 mDownloadThreads[i].cancelByError();
